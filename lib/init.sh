@@ -17,6 +17,14 @@ init_base()
     ln -s fd/2          /dev/stderr
 }
 
+load_modules()
+{
+    { IFS=,; set -- $modules_load; unset IFS; }
+    for _mod; do
+        modprobe $_mod
+    done
+}
+
 eval_hooks()
 {
     _type=$1
@@ -113,6 +121,7 @@ trap panic EXIT
 
 init_base
 parse_cmdline
+load_modules
 eval_hooks init
 mount_root
 eval_hooks init.late
